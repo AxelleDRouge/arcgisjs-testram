@@ -4,7 +4,7 @@ import * as urlUtils from "esri/core/urlUtils";
 let urls = new Array();
 urls = URLs;
 
-const DEFAULT_WORKER_URL = "https://js.arcgis.com/4.11/";
+const DEFAULT_WORKER_URL = "https://js.arcgis.com/4.12/";
 const DEFAULT_LOADER_URL = `${DEFAULT_WORKER_URL}dojo/dojo-lite.js`;
 
 esriConfig.workers.loaderUrl = DEFAULT_LOADER_URL;
