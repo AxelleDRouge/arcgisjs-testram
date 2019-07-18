@@ -1,0 +1,31 @@
+build site:
+  image: node:8
+  stage: build
+  script:
+    - npm install --progress=false
+    - npm run build
+  artifacts:
+    paths:
+      - dist
+
+unit test:
+  image: jimador/docker-jdk-8-maven-node
+  stage: test
+  script:
+    - echo "npm install"
+    - echo "npm test"
+    
+deploy:
+  image: ubuntu:latest
+  stage: deploy
+  script:
+    - apt-get update -qq && apt-get install -y -qq sshpass
+    - sshpass -V
+    - export SSHPASS=$PPRPA_PASS 
+    - echo $PPRPA_PORT $PPRPA_HOST $PPRPA_USER
+    - sshpass -e ssh -o stricthostkeychecking=no -p $PPRPA_PORT $PPRPA_USER@$PPRPA_HOST "ls -al /builds/PP_GEOPPORTAIL/compajstestclientram"
+    - sshpass -e ssh -o stricthostkeychecking=no -p $PPRPA_PORT $PPRPA_USER@$PPRPA_HOST "rm -rf /data/sig/product/httpd-2.4.39/htdocs/COMPA_V2_JS/test/dist"
+    - sshpass -e scp -r -o stricthostkeychecking=no -P $PPRPA_PORT /builds/PP_GEOPPORTAIL/compajstestclientram/dist $PPRPA_USER@$PPRPA_HOST:/data/sig/product/httpd-2.4.39/htdocs/COMPA_V2_JS/test
+    - sshpass -e scp -r -o stricthostkeychecking=no -P $PPRPA_PORT /builds/PP_GEOPPORTAIL/compajstestclientram/index.html $PPRPA_USER@$PPRPA_HOST:/data/sig/product/httpd-2.4.39/htdocs/COMPA_V2_JS/test
+ 
+
